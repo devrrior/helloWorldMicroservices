@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  api-gateway-nginx:
+    image: nginx:1.25.5-alpine
+    volumes:
+      - ./apiGatewayNginx/apiGateway.conf:/etc/nginx/conf.d/default.conf
+      - ./apiGatewayNginx/index.html:/usr/share/nginx/html/index.html
+    ports:
+      - "8081:80"
+    depends_on:
+      - inventory-api
+      - orders-api
+
+
+  inventory-api:
+    build:
+      context: ./inventoryMicroservice
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
+
+  orders-api:
+    build:
+      context: ./ordersMicroservice
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
